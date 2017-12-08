@@ -20,7 +20,7 @@ debug {
  每个模块都会生成单独的覆盖率文件，在各自的
 build/reports/coverage/debug/index.html.
  
-connectedDebugAndroidTest 执行android的单元case 
+？connectedDebugAndroidTest 执行android的单元case ，也会产生覆盖率报告（配置jacoco后，配置前未验证）
 createDebugCoverageReport 产生代码覆盖率的报告 （createDebugCoverageReport任务会调用connectedDebugAndroidTest ）
 connectedCheck 包含上面2个任务 
 
@@ -33,7 +33,7 @@ connectedCheck 包含上面2个任务
 android单元测试继承extends ActivityInstrumentationTestCase2 
 
 
-？配置jacocoTestReport任务，只执行java unit相关，生成jacoco文件夹里面含有覆盖率，
+？配置jacocoTestReport任务，执行dependsOn相关，如果执行成功后的话在reports文件夹里生成jacoco文件夹或者coverage文件夹里面含有覆盖率，好像只能执行Junit相关的
 ？使用jacocoTestReport其他模块的不会自动生成。
 
 
