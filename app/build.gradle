@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
-
+jacoco {
+    toolVersion = "0.7.9"
+}
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.danyuan"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -42,19 +44,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.1'
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
     implementation project(':libone')
     implementation project(':libtwo')
 }
-jacoco {
-    toolVersion = "0.7.9"
-}
-def coverageSourceDirs = [
-        '../app/src/main/java'   ,
-        '../libone/src/main/java',
-        '../libtwo/src/main/java'
 
-]
+
 task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
     group = "Reporting"
 
@@ -68,7 +63,11 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
                        '**/BuildConfig.*',
                        '**/Manifest*.*']          // 去掉不进行检查的文件
     )
-
+    def coverageSourceDirs = [
+            '../app/src/main/java',
+            '../libone/src/main/java',
+            '../libtwo/src/main/java'
+    ]
     additionalSourceDirs = files(coverageSourceDirs)
     sourceDirectories = files(coverageSourceDirs)
     executionData = files('../app/build/jacoco/testDebugUnitTest.exec')

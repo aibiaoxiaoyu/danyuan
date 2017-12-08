@@ -12,6 +12,6 @@ import static org.junit.Assert.assertEquals;
 public class liboneUnitTest2 {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        assertEquals(true, LibOneUtil.testData2());
     }
 }
