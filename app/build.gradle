@@ -1,10 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.danyuan"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -17,13 +18,16 @@ android {
                 exclude '**/R.java'
             }
         }
-        test{
+        test {
             java {
                 exclude '**/R.java'
             }
         }
     }
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -38,6 +42,39 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.1'
     implementation project(':libone')
     implementation project(':libtwo')
+}
+jacoco {
+    toolVersion = "0.7.9"
+}
+def coverageSourceDirs = [
+        '../app/src/main/java'   ,
+        '../libone/src/main/java',
+        '../libtwo/src/main/java'
+
+]
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
+    group = "Reporting"
+
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: '../app/build/intermediates/classes/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$ViewInjector*.*',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']          // 去掉不进行检查的文件
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('../app/build/jacoco/testDebugUnitTest.exec')
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
