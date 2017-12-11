@@ -1,5 +1,7 @@
 package com.danyuan;
 
+import com.libone.LibOneUtil;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,5 +15,7 @@ public class appUnitTest2 {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(true, AppUtil.testData2());
+        assertEquals(true, LibOneUtil.testData());
+        assertEquals(true, LibOneUtil.testData2());
     }
 }

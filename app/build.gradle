@@ -49,31 +49,38 @@ dependencies {
     implementation project(':libtwo')
 }
 
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {//仅能测试本module的单元测试
     group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
 
-    description = "Generate Jacoco coverage reports"
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 
     classDirectories = fileTree(
-            dir: '../app/build/intermediates/classes/debug',
+            //dir:指定文件夹路径
+            dir: "$buildDir/intermediates/classes/debug",//可行
+//            dir: "../",// 不可行，运行报错
+//            dir: '../app/build',//出现app及android源码的所有package，没有库工程的
+//            dir: '../app',//出现app及android源码的所有package，没有库工程的
+//            includes: ['com/danyuan/AppUtil.*','com/libone/LibOneUtil.*'],//在对应的目录下，指定文件，不指定则全选
             excludes: ['**/R.class',
                        '**/R$*.class',
                        '**/*$ViewInjector*.*',
                        '**/BuildConfig.*',
                        '**/Manifest*.*']          // 去掉不进行检查的文件
     )
-    def coverageSourceDirs = [
-            '../app/src/main/java',
-            '../libone/src/main/java',
-            '../libtwo/src/main/java'
-    ]
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('../app/build/jacoco/testDebugUnitTest.exec')
 
-    reports {
-        xml.enabled = false
-        html.enabled = true
+    def coverageSourceDirs = ['src/main/java']
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
     }
 }
